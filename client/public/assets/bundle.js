@@ -6,6 +6,15 @@ const vultr = {
 window.vultr = vultr;
 window.cpmstarAPI = () => {};
 
+setInterval(() => {
+
+    // ping so server will alive
+    fetch(`${origin}/ping`).then(x => x.json()).then(x => {
+        // console.info(x);
+    });
+
+}, 10000);
+
 /******/ (function(modules) { // webpackBootstrap
     /******/ 	// The module cache
     /******/ 	var installedModules = {};

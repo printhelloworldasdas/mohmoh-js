@@ -23,6 +23,10 @@ app.get("/", (_req, res) => {
     res.sendFile(INDEX);
 });
 
+app.get("/ping", (_req, res) => {
+    res.send("Ok");
+});
+
 app.use(e.static("../client/public"));
 
 const game = new Game;
