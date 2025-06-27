@@ -4,16 +4,6 @@ const vultr = {
 };
 
 window.vultr = vultr;
-window.cpmstarAPI = () => {};
-
-setInterval(() => {
-
-    // ping so server will alive
-    fetch(`${origin}/ping`).then(x => x.text()).then(x => {
-        // console.info(x);
-    });
-
-}, 50000);
 
 /******/ (function(modules) { // webpackBootstrap
     /******/ 	// The module cache
@@ -7644,16 +7634,16 @@ setInterval(() => {
         var didLoad = false;
         var captchaReady = false;
         captchaReady = true;
-        window.onblur = function() {
+        !window.onblur && (window.onblur = function() {
             inWindow = false;
-        };
-        window.onfocus = function() {
+        });
+        !window.onfocus && (window.onfocus = function() {
             inWindow = true;
             if (player && player.alive) {
                 resetMoveDir();
             }
-        };
-        window.onload = function() {
+        });
+        !window.onload && (window.onload = function() {
             didLoad = true;
             connectSocketIfReady();
 
@@ -7663,7 +7653,7 @@ setInterval(() => {
                     window.location.reload();
                 }
             }, 20 * 1000);
-        };
+        });
         gameCanvas.oncontextmenu = function() {
             return false;
         };
