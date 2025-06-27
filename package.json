@@ -1,0 +1,16 @@
+{
+  "name": "mohmoh",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmgAmogus/mohmoh-js.git"
+  },
+  "keywords": [],
+  "author": "mooooh",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/OmgAmogus/mohmoh-js/issues"
+  },
+  "homepage": "https://github.com/OmgAmogus/mohmoh-js#readme",
+  "description": "moh"
+}

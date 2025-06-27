@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bad-words": "^4.0.0",
+    "express": "^5.1.0",
+    "msgpack-lite": "^0.1.26",
+    "nanotimer": "^0.3.15",
+    "ws": "^8.18.2"
+  }
+}
