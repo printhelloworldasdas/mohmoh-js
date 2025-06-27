@@ -122,10 +122,12 @@ export class Game {
 
         const init_objects = () => {
 
-            let treesPerArea = 9 * 2 * shrink;
-            let bushesPerArea = 3 * 2 * shrink;
-            let totalRocks = 32 * 2 * shrink;
-            let goldOres = 7 * 2 * shrink;
+            const s2 = shrink < 1 ? shrink * .5 : shrink;
+
+            let treesPerArea = 9 * 2 * s2;
+            let bushesPerArea = 3 * 2 * s2;
+            let totalRocks = 32 * 2 * s2;
+            let goldOres = 7 * 2 * s2;
             let treeScales = [150, 160, 165, 175];
             let bushScales = [80, 85, 95];
             let rockScales = [80, 85, 90];
