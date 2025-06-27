@@ -9,11 +9,11 @@ window.cpmstarAPI = () => {};
 setInterval(() => {
 
     // ping so server will alive
-    fetch(`${origin}/ping`).then(x => x.json()).then(x => {
+    fetch(`${origin}/ping`).then(x => x.text()).then(x => {
         // console.info(x);
     });
 
-}, 10000);
+}, 50000);
 
 /******/ (function(modules) { // webpackBootstrap
     /******/ 	// The module cache
