@@ -33,7 +33,6 @@ const game = new Game;
 
 wss.on("connection", socket => {
 
-    let spawned = false;
     /**
      * @type {Player | null}
      */
@@ -310,10 +309,6 @@ wss.on("connection", socket => {
     });
 
     socket.on("close", reason => {
-    
-        if (!spawned) {
-            return;
-        }
 
         game.removePlayer(player?.id);
 

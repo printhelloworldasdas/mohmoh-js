@@ -122,7 +122,7 @@ export class Game {
 
         const init_objects = () => {
 
-            const s2 = shrink < 1 ? shrink * .5 : shrink;
+            const s2 = shrink <= 1 ? shrink * .25 : shrink;
 
             let treesPerArea = 9 * 2 * s2;
             let bushesPerArea = 3 * 2 * s2;
