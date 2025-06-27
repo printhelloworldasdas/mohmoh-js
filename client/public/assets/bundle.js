@@ -7392,7 +7392,7 @@ setInterval(() => {
             (() => {
 
                 // CONNECT:
-                io.connect(`ws://${location.hostname}:8080`, function(error) {
+                io.connect(origin, function(error) {
                     pingSocket();
                     setInterval(() => pingSocket(), 2500);
 
