@@ -10402,6 +10402,8 @@ setInterval(() => {
     /***/ (function(module, exports, __webpack_require__) {
 
         /* WEBPACK VAR INJECTION */(function(process) {
+
+            const shrink = 0.2;
             // RENDER:
             module.exports.maxScreenWidth = 1920;
             module.exports.maxScreenHeight = 1080;
@@ -10496,8 +10498,8 @@ setInterval(() => {
             module.exports.bushesPerArea = 3;
             module.exports.totalRocks = 32;
             module.exports.goldOres = 7;
-            module.exports.riverWidth = 724;
-            module.exports.riverPadding = 114;
+            module.exports.riverWidth = 724 * shrink;
+            module.exports.riverPadding = 114 * shrink;
             module.exports.waterCurrent = 0.0011;
             module.exports.waveSpeed = 0.0001;
             module.exports.waveMax = 1.3;
@@ -10506,14 +10508,14 @@ setInterval(() => {
             module.exports.rockScales = [80, 85, 90];
 
             // BIOME DATA:
-            module.exports.snowBiomeTop = 2400;
+            module.exports.snowBiomeTop = 2400 * shrink;
             module.exports.snowSpeed = 0.75;
 
             // DATA:
             module.exports.maxNameLength = 15;
 
             // MAP:
-            module.exports.mapScale = 14400;
+            module.exports.mapScale = 14400 * shrink;
             module.exports.mapPingScale = 40;
             module.exports.mapPingTime = 2200;
 

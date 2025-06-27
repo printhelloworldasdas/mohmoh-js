@@ -1,6 +1,8 @@
 
 export const config = {};
 
+export const shrink = 0.2;
+
 // RENDER:
 config.maxScreenWidth = 1920;
 config.maxScreenHeight = 1080;
@@ -93,8 +95,8 @@ config.treesPerArea = 9;
 config.bushesPerArea = 3;
 config.totalRocks = 32;
 config.goldOres = 7;
-config.riverWidth = 724;
-config.riverPadding = 114;
+config.riverWidth = 724 * shrink;
+config.riverPadding = 114 * shrink;
 config.waterCurrent = 0.0011;
 config.waveSpeed = 0.0001;
 config.waveMax = 1.3;
@@ -103,14 +105,14 @@ config.bushScales = [80, 85, 95];
 config.rockScales = [80, 85, 90];
 
 // BIOME DATA:
-config.snowBiomeTop = 2400;
+config.snowBiomeTop = 2400 * shrink;
 config.snowSpeed = 0.75;
 
 // DATA:
 config.maxNameLength = 15;
 
 // MAP:
-config.mapScale = 14400;
+config.mapScale = 14400 * shrink;
 config.mapPingScale = 40;
 config.mapPingTime = 2200;
 

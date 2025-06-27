@@ -2,7 +2,7 @@
 import { Player } from "./modules/player.js";
 import { AI } from "./modules/ai.js";
 import { UTILS } from "./libs/utils.js";
-import { config } from "./config.js";
+import { config, shrink } from "./config.js";
 import { ProjectileManager } from "./modules/projectileManager.js";
 import { Projectile } from "./modules/projectile.js";
 import { ObjectManager } from "./modules/objectManager.js";
@@ -120,6 +120,64 @@ export class Game {
 
         }, nano);
 
+        const init_objects = () => {
+
+            let treesPerArea = 9 * 2 * shrink;
+            let bushesPerArea = 3 * 2 * shrink;
+            let totalRocks = 32 * 2 * shrink;
+            let goldOres = 7 * 2 * shrink;
+            let treeScales = [150, 160, 165, 175];
+            let bushScales = [80, 85, 95];
+            let rockScales = [80, 85, 90];
+            let cLoc = function () {
+                return Math.round(Math.random() * config.mapScale);
+            };
+            let rScale = function (scales) {
+                return scales[Math.floor(Math.random() * scales.length)];
+            };
+            for (let i = 0; i < treesPerArea * 7;) {
+                let newObject = [this.game_objects.length, cLoc(), cLoc(), 0, rScale(treeScales), 0, undefined, false, null];
+                if (newObject[2] >= config.mapScale / 2 - config.riverWidth / 2 && newObject[2] <= config.mapScale / 2 + config.riverWidth / 2) continue;
+                if (newObject[2] >= config.mapScale - config.snowBiomeTop) continue;
+                if (this.object_manager.checkItemLocation(newObject[1], newObject[2], newObject[4], 0.6, null, false, null, true)) {
+                    this.object_manager.add(...newObject);
+                } else {
+                    continue;
+                }
+                i++;
+            };
+            for (let i = 0; i < bushesPerArea * 7;) {
+                let newObject = [this.game_objects.length, cLoc(), cLoc(), 0, rScale(bushScales), 1, undefined, false, null];
+                if (newObject[2] >= config.mapScale / 2 - config.riverWidth / 2 && newObject[2] <= config.mapScale / 2 + config.riverWidth / 2) continue;
+                if (this.object_manager.checkItemLocation(newObject[1], newObject[2], newObject[4], 0.6, null, false, null, true)) {
+                    this.object_manager.add(...newObject);
+                } else {
+                    continue;
+                }
+                i++;
+            };
+            for (let i = 0; i < totalRocks;) {
+                let newObject = [this.game_objects.length, cLoc(), cLoc(), 0, rScale(rockScales), 2, undefined, false, null];
+                if (this.object_manager.checkItemLocation(newObject[1], newObject[2], newObject[4], 0.6, null, true, null, true)) {
+                    this.object_manager.add(...newObject);
+                } else {
+                    continue;
+                }
+                i++;
+            };
+            for (let i = 0; i < goldOres;) {
+                let newObject = [this.game_objects.length, cLoc(), cLoc(), 0, rScale(rockScales), 3, undefined, false, null];
+                if (this.object_manager.checkItemLocation(newObject[1], newObject[2], newObject[4], 0.6, null, true, null, true)) {
+                    this.object_manager.add(...newObject);
+                } else {
+                    continue;
+                }
+                i++;
+            };
+        };
+
+        init_objects();
+
     }
 
     addPlayer(socket) {
@@ -163,6 +221,7 @@ export class Game {
 
             if (player.id === id) {
                 this.server.broadcast("4", player.id);
+                this.object_manager.removeAllItems(player.sid, this.server);
                 this.players.splice(i, 1);
                 this.id_storage[player.sid] = true;
                 break;
