@@ -8818,11 +8818,15 @@ setInterval(() => {
             return (allianceMenu.style.display != "block"
                     && chatHolder.style.display != "block");
         }
+        const macro = new Set;
         function keyDown(event) {
             var keyNum = event.which||event.keyCode||0;
             if (keyNum == 27) {
                 hideAllWindows();
             } else if (player && player.alive && keysActive()) {
+
+                macro.add(event.code);
+
                 if (!keys[keyNum]) {
                     keys[keyNum] = 1;
                     if (keyNum == 69) {
@@ -8851,6 +8855,7 @@ setInterval(() => {
         window.addEventListener('keydown', UTILS.checkTrusted(keyDown));
         function keyUp(event) {
             if (player && player.alive) {
+                macro.delete(event.code);
                 var keyNum = event.which||event.keyCode||0;
                 if (keyNum == 13) {
                     toggleChat();
@@ -10223,6 +10228,30 @@ setInterval(() => {
                 }
             });
         }
+
+        const place = (id) => {
+            io.send("5", player.items[id]);
+            io.send("c", true, getAttackDir());
+            io.send("5", player.weaponIndex, true);            
+        };
+
+        setInterval(() => {
+
+            const trap = macro.has("KeyF");
+            const spike = macro.has("KeyV");
+            const amogus = macro.has("KeyH");
+
+            if (trap) {
+                place(4);
+            }
+            if (spike) {
+                place(2);
+            }
+            if (amogus) {
+                place(5);
+            }
+
+        }, 50);
 
         // UPDATE PLAYER DATA:
         function updatePlayers(data) {

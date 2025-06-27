@@ -165,6 +165,12 @@ wss.on("connection", socket => {
                         break;
                     }
 
+                    if (player.buildIndex === data[0]) {
+                        player.buildIndex = -1;
+                        player.mouseState = 0;
+                        break;
+                    }
+
                     player.buildIndex = data[0];
                     player.mouseState = 0;
                     break;

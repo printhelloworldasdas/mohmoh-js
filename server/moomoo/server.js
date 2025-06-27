@@ -45,12 +45,12 @@ export class Game {
 
     constructor() {
 
-        const nano = (1000 / config.serverUpdateRate) * 1_000;
+        const nano = (1000 / config.serverUpdateRate);
         const timer = new NanoTimer;
 
         let last = 0;
 
-        timer.setInterval(() => {
+        setInterval(() => {
 
             const t = performance.now();
 
@@ -118,7 +118,7 @@ export class Game {
 
             }
 
-        }, "", `${nano}u`);
+        }, nano);
 
     }
 
