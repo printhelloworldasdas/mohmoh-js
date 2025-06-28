@@ -13,6 +13,11 @@ html, body {
 	padding: 0;
 }
 
+.nodisplay {
+	display: none;
+	visibility: hidden;
+}
+
 ::-webkit-input-placeholder {
 	color:    #cecece;
 }

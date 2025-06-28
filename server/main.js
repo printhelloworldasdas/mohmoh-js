@@ -239,6 +239,12 @@ wss.on("connection", socket => {
                 }
                 case "6": {
 
+                    if (!player || !player.alive) {
+                        break;
+                    }
+
+                    if (player.upgradePoints <= 0) break;
+
                     const item = Number.parseInt(data[0]);
 
                     const upgr_items = items.list.filter(x => x.age === player.upgrAge);
@@ -379,6 +385,8 @@ wss.on("connection", socket => {
     });
 
     socket.on("close", reason => {
+
+        if (!player) return;
 
         if (player.team) {
 
