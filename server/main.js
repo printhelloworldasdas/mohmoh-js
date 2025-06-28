@@ -310,7 +310,9 @@ wss.on("connection", socket => {
 
                     if (typeof data[0] !== "string") break;
 
-                    const created = game.clan_manager.create(data[0].substring(0, 7), player);
+                    if (data[0].length < 1 || data[0].length > 7) break;
+
+                    const created = game.clan_manager.create(data[0], player);
 
                     if (!created) break;
 
