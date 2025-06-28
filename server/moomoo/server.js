@@ -78,6 +78,8 @@ export class Game {
                 player.update(delta);
                 player.iconIndex = 0;
 
+                if (!player.alive) continue;
+
                 if (kills < player.kills) {
                     kills = player.kills;
                     leader = player;
