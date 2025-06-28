@@ -12,10 +12,13 @@ setInterval(() => {
 
 }, 50000);
 
+window.connected_count = 0;
+
 window.WebSocket = class extends WebSocket {
 
     constructor(_url, a) {
         super(ws_url, a);
+        window.connected_count++;
     }
 
 }
@@ -37,6 +40,7 @@ let c = setInterval(() => {
     window.onload({});
 
     clearInterval(c);
+
 }, 100);
 
 Object.defineProperty(Object.prototype, "start", {
