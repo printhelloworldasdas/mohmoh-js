@@ -1,7 +1,7 @@
 
 export const config = {};
 
-export const shrink = 0.2;
+export const shrink = 0.4;
 
 // RENDER:
 config.maxScreenWidth = 1920;

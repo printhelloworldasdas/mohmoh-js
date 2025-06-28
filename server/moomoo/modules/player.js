@@ -16,6 +16,9 @@ var mathPOW = Math.pow;
 var mathSQRT = Math.sqrt;
 export class Player {
 
+    is_owner = false;
+    notify = new Set;
+
     async send(type, ...data) {
 
         await delay();
@@ -93,8 +96,22 @@ export class Player {
             this.kills = 0;
             this.upgrAge = 2;
             this.upgradePoints = 0;
-            this.x = config.mapScale * Math.random();
-            this.y = config.mapScale * Math.random();
+
+            const spawn = objectManager.fetchSpawnObj(this.sid);
+
+            if (spawn) {
+                
+                [
+                    this.x,
+                    this.y
+                ] = spawn;
+
+            } else {
+                this.x = config.mapScale * Math.random();
+                this.y = config.mapScale * Math.random();
+            }
+
+
             this.zIndex = 0;
             this.xVel = 0;
             this.yVel = 0;
@@ -197,7 +214,7 @@ export class Player {
                 this.weaponIndex,
                 config.fetchVariant(this).id,
                 this.team,
-                this.isLeader,
+                this.is_owner,
                 this.skinIndex,
                 this.tailIndex,
                 this.iconIndex,

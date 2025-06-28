@@ -10,6 +10,7 @@ import { GameObject } from "./modules/gameObject.js";
 import { items } from "./modules/items.js";
 import { AiManager } from "./modules/aiManager.js";
 import { accessories, hats } from "./modules/store.js";
+import { ClanManager } from "./modules/clanManager.js";
 
 import NanoTimer from "nanotimer";
 import { encode } from "msgpack-lite";
@@ -40,6 +41,7 @@ export class Game {
     ai_manager = new AiManager(this.ais, AI, this.players, items, this.object_manager, config, UTILS, () => {}, this.server);
     object_manager = new ObjectManager(GameObject, this.game_objects, UTILS, config, this.players, this.server);
     projectile_manager = new ProjectileManager(Projectile, this.projectiles, this.players, this.ais, this.object_manager, items, config, UTILS, this.server);
+    clan_manager = new ClanManager(this.players, this.server);
 
     id_storage = new Array(config.maxPlayersHard).fill(true);
 
@@ -49,6 +51,7 @@ export class Game {
         const timer = new NanoTimer;
 
         let last = 0;
+        let minimap_cd = config.minimapRate;
 
         setInterval(() => {
 
@@ -60,6 +63,16 @@ export class Game {
             let kills = 0;
             let leader = null;
 
+            const updt_map = minimap_cd <= 0;
+
+            if (updt_map) {
+                minimap_cd = config.minimapRate;
+            } else {
+                minimap_cd -= delta;
+            }
+
+            const minimap_ext = [];
+
             for (const player of this.players) {
 
                 player.update(delta);
@@ -68,6 +81,14 @@ export class Game {
                 if (kills < player.kills) {
                     kills = player.kills;
                     leader = player;
+                }
+
+                if (updt_map) {
+                    minimap_ext.push({
+                        sid: player.sid,
+                        x: player.x,
+                        y: player.y
+                    });
                 }
 
             }
@@ -79,6 +100,23 @@ export class Game {
 
             for (const object of this.game_objects) 
                 object.update(delta);
+
+            // leaderboard
+            {
+
+                const sort = this.players.filter(x => x.alive).sort((a, b) => {
+                    return b.points - a.points;
+                });
+                const sorts = [];
+                for (let i = 0; i < Math.min(10, sort.length); i++) {
+                    sorts.push(sort[i]);
+                }
+
+                console.log(sorts);
+
+                this.server.broadcast("5", sorts.flatMap(p => [p.sid, p.name, p.points]));
+
+            }
 
             for (const player of this.players) {
 
@@ -113,8 +151,12 @@ export class Game {
                 player.send("33", sent_players.flatMap(data => data));
         
                 if (sent_objects.length > 0) {
-                    player.send("6", sent_objects.map(object => [object.sid, UTILS.fixTo(object.x, 1), UTILS.fixTo(object.y, 1), object.dir, object.scale, object.type, object.id, object.owner ? object.owner.sid : -1]).flatMap(x => x));
+                    player.send("6", sent_objects.flatMap(object => [object.sid, UTILS.fixTo(object.x, 1), UTILS.fixTo(object.y, 1), object.dir, object.scale, object.type, object.id, object.owner ? object.owner.sid : -1]));
                 }
+
+                if (minimap_ext.length === 0) continue;
+
+                player.send("mm", minimap_ext.filter(x => x.sid !== player.sid).flatMap(x => [x.x, x.y]));
 
             }
 
@@ -205,7 +247,7 @@ export class Game {
 
         player.send("io-init", player.id);
         player.send("id", {
-            teams: []
+            teams: this.clan_manager.ext()
         });
 
         this.id_storage[sid] = false;

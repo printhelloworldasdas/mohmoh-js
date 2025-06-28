@@ -68,7 +68,7 @@ wss.on("connection", socket => {
                         }
 
                         player.setUserData(data[0]);
-                        player.spawn(data[0].moofoll);
+                        player.spawn(data[0]?.moofoll);
                         player.send("1", player.sid);
 
                     })();
@@ -152,6 +152,10 @@ wss.on("connection", socket => {
                             break;
                         }
 
+                        if (player.weapons[wpn.type] !== data[0]) {
+                            break;
+                        }
+
                         player.buildIndex = -1;
                         player.weaponIndex = data[0];
                         break;
@@ -187,7 +191,7 @@ wss.on("connection", socket => {
             
                         if (tail) {
                             if (type) {
-                                if (!player.tails[id]) {
+                                if (!player.tails[id] && player.points >= tail.price) {
                                     player.tails[id] = 1;
                                     emit("us", 0, id, 1);
                                 }
@@ -210,7 +214,7 @@ wss.on("connection", socket => {
             
                         if (hat) {
                             if (type) {
-                                if (!player.skins[id]) {
+                                if (!player.skins[id] && player.points >= hat.price) {
                                     player.skins[id] = 1;
                                     emit("us", 0, id, 0);
                                 }
@@ -250,6 +254,12 @@ wss.on("connection", socket => {
 
                             player.weapons[wpn.type] = wpn.id;
                             player.weaponXP[wpn.type] = 0;
+
+                            const type = player.weaponIndex < 9 ? 0 : 1;
+
+                            if (wpn.type === type) {
+                                player.weaponIndex = wpn.id;
+                            }
 
                             return true;
 
@@ -294,6 +304,53 @@ wss.on("connection", socket => {
                     emit("pp");
                     break;
                 }
+                case "8": {
+
+                    if (!player || !player.alive) break;
+
+                    if (typeof data[0] !== "string") break;
+
+                    const created = game.clan_manager.create(data[0].substring(0, 7), player);
+
+                    if (!created) break;
+
+                    player.is_owner = true;
+
+                    break;
+                }
+                case "9": {
+
+                    if (!player || !player.alive) break;
+
+                    if (!player.team) break;
+
+                    if (player.is_owner) {
+                        game.clan_manager.remove(player.team);
+                        break;
+                    }
+                    
+                    game.clan_manager.kick(player.team, player.sid);
+
+                }
+                case "10": {
+
+                    if (!player || !player.alive) break;
+
+                    if (player.team) break;
+
+                    game.clan_manager.add_notify(data[0], player.sid);
+
+                }
+                case "11": {
+
+                    if (!player || !player.alive) break;
+
+                    if (!player.team) break;
+
+                    game.clan_manager.confirm_join(player.team, data[0], data[1]);
+                    player.notify.delete(data[0]);
+
+                }
                 default:
                     break;
             }
@@ -309,6 +366,16 @@ wss.on("connection", socket => {
     });
 
     socket.on("close", reason => {
+
+        if (player.team) {
+
+            if (player.is_owner) {
+                game.clan_manager.remove(player.team);
+            } else {
+                game.clan_manager.kick(player.team, player.sid);
+            }
+
+        }
 
         game.removePlayer(player?.id);
 

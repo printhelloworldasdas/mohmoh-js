@@ -8247,7 +8247,7 @@ window.vultr = vultr;
                 renderCircle((player.x/config.mapScale)*mapDisplay.width,
                              (player.y/config.mapScale)*mapDisplay.height, 7, mapContext, true);
                 mapContext.fillStyle = "rgba(255,255,255,0.35)";
-                if (player.team && minimapData) {
+                if (/*player.team && */minimapData) {
                     for (var i = 0; i < minimapData.length;) {
                         renderCircle((minimapData[i]/config.mapScale)*mapDisplay.width,
                                      (minimapData[i+1]/config.mapScale)*mapDisplay.height, 7, mapContext, true);
@@ -8808,14 +8808,12 @@ window.vultr = vultr;
             return (allianceMenu.style.display != "block"
                     && chatHolder.style.display != "block");
         }
-        const macro = new Set;
+
         function keyDown(event) {
             var keyNum = event.which||event.keyCode||0;
             if (keyNum == 27) {
                 hideAllWindows();
             } else if (player && player.alive && keysActive()) {
-
-                macro.add(event.code);
 
                 if (!keys[keyNum]) {
                     keys[keyNum] = 1;
@@ -8845,7 +8843,7 @@ window.vultr = vultr;
         window.addEventListener('keydown', UTILS.checkTrusted(keyDown));
         function keyUp(event) {
             if (player && player.alive) {
-                macro.delete(event.code);
+
                 var keyNum = event.which||event.keyCode||0;
                 if (keyNum == 13) {
                     toggleChat();
@@ -10219,30 +10217,6 @@ window.vultr = vultr;
             });
         }
 
-        const place = (id) => {
-            io.send("5", player.items[id]);
-            io.send("c", true, getAttackDir());
-            io.send("5", player.weaponIndex, true);            
-        };
-
-        setInterval(() => {
-
-            const trap = macro.has("KeyF");
-            const spike = macro.has("KeyV");
-            const amogus = macro.has("KeyH");
-
-            if (trap) {
-                place(4);
-            }
-            if (spike) {
-                place(2);
-            }
-            if (amogus) {
-                place(5);
-            }
-
-        }, 50);
-
         // UPDATE PLAYER DATA:
         function updatePlayers(data) {
             var tmpTime = Date.now();
@@ -10393,7 +10367,7 @@ window.vultr = vultr;
 
         /* WEBPACK VAR INJECTION */(function(process) {
 
-            const shrink = 0.2;
+            const shrink = 0.4;
             // RENDER:
             module.exports.maxScreenWidth = 1920;
             module.exports.maxScreenHeight = 1080;

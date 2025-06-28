@@ -17,7 +17,7 @@ window.WebSocket = class extends WebSocket {
 
 }
 
-const shrink = 0.2;
+const shrink = 0.4;
 
 let c = setInterval(() => {
 
