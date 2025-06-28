@@ -112,8 +112,6 @@ export class Game {
                     sorts.push(sort[i]);
                 }
 
-                console.log(sorts);
-
                 this.server.broadcast("5", sorts.flatMap(p => [p.sid, p.name, p.points]));
 
             }
