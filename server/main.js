@@ -330,6 +330,7 @@ wss.on("connection", socket => {
                     }
                     
                     game.clan_manager.kick(player.team, player.sid);
+                    break;
 
                 }
                 case "10": {
@@ -339,6 +340,7 @@ wss.on("connection", socket => {
                     if (player.team) break;
 
                     game.clan_manager.add_notify(data[0], player.sid);
+                    break;
 
                 }
                 case "11": {
@@ -349,7 +351,16 @@ wss.on("connection", socket => {
 
                     game.clan_manager.confirm_join(player.team, data[0], data[1]);
                     player.notify.delete(data[0]);
+                    break;
 
+                }
+                case "rmd": {
+
+                    if (!player || !player.alive) break;
+
+                    player.resetMoveDir();
+
+                    break;
                 }
                 default:
                     break;
