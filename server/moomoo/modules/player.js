@@ -19,6 +19,8 @@ export class Player {
     is_owner = false;
     notify = new Set;
     chat_cooldown = 0;
+    clan_cooldown = 0;
+    ping_cooldown = 0;
 
     async send(type, ...data) {
 
@@ -246,6 +248,12 @@ export class Player {
 
             if (this.chat_cooldown >= 0) {
                 this.chat_cooldown -= delta;
+            }
+            if (this.clan_cooldown >= 0) {
+                this.clan_cooldown -= delta;
+            }
+            if (this.ping_cooldown >= 0) {
+                this.ping_cooldown -= delta;
             }
 
             // SHAME SHAME SHAME:

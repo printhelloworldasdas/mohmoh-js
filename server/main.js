@@ -10,6 +10,10 @@ import { UTILS } from "./moomoo/libs/utils.js";
 import { hats, accessories } from "./moomoo/modules/store.js";
 import { delay } from "./moomoo/modules/delay.js";
 import { filter_chat } from "./moomoo/libs/filterchat.js";
+import { config } from "./moomoo/config.js";
+import { ConnectionLimit } from "./moomoo/libs/limit.js";
+
+const colimit = new ConnectionLimit(4);
 
 const app = e();
 const server = createServer(app);
@@ -20,7 +24,7 @@ const wss = new WebSocketServer({
 const INDEX = path.join(import.meta.dirname, "../client/index.html");
 const PORT = 8080;
 
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
     res.sendFile(INDEX);
 });
 
@@ -32,7 +36,17 @@ app.use(e.static("../client/public"));
 
 const game = new Game;
 
-wss.on("connection", socket => {
+wss.on("connection", (socket, req) => {
+
+    const addr = req.socket.remoteAddress;
+
+    if (
+        colimit.check(addr)
+    ) {
+        return void socket.close(4001);
+    }
+
+    colimit.up(addr);
 
     /**
      * @type {Player | null}
@@ -331,6 +345,10 @@ wss.on("connection", socket => {
 
                     if (!player || !player.alive) break;
 
+                    if (player.team) break;
+
+                    if (player.clan_cooldown > 0) break;
+
                     if (typeof data[0] !== "string") break;
 
                     if (data[0].length < 1 || data[0].length > 7) break;
@@ -339,6 +357,7 @@ wss.on("connection", socket => {
 
                     if (!created) break;
 
+                    player.clan_cooldown = 200;
                     player.is_owner = true;
 
                     break;
@@ -348,6 +367,10 @@ wss.on("connection", socket => {
                     if (!player || !player.alive) break;
 
                     if (!player.team) break;
+
+                    if (player.clan_cooldown > 0) break;
+
+                    player.clan_cooldown = 200;
 
                     if (player.is_owner) {
                         game.clan_manager.remove(player.team);
@@ -364,6 +387,10 @@ wss.on("connection", socket => {
 
                     if (player.team) break;
 
+                    if (player.clan_cooldown > 0) break;
+
+                    player.clan_cooldown = 200;
+
                     game.clan_manager.add_notify(data[0], player.sid);
                     break;
 
@@ -374,10 +401,26 @@ wss.on("connection", socket => {
 
                     if (!player.team) break;
 
+                    if (player.clan_cooldown > 0) break;
+
+                    player.clan_cooldown = 200;
+
                     game.clan_manager.confirm_join(player.team, data[0], data[1]);
                     player.notify.delete(data[0]);
                     break;
 
+                }
+                case "14": {
+
+                    if (!player || !player.alive) break;
+
+                    if (player.ping_cooldown > 0) break;
+
+                    player.ping_cooldown = config.mapPingTime;
+
+                    game.server.broadcast("p", player.x, player.y);
+
+                    break;
                 }
                 case "rmd": {
 
@@ -402,6 +445,8 @@ wss.on("connection", socket => {
     });
 
     socket.on("close", reason => {
+
+        colimit.down(addr);
 
         if (!player) return;
 
