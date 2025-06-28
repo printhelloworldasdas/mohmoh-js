@@ -7361,6 +7361,7 @@ window.vultr = vultr;
         var connected = false;
         var startedConnecting = false;
         function connectSocketIfReady() {
+
             // MAKE SURE IT'S READY:
             if (!didLoad || !captchaReady) return;
             startedConnecting = true;
@@ -10183,38 +10184,6 @@ window.vultr = vultr;
                     tmpObj.alive = false;
                 }
             }
-        }
-
-        let move = Math.PI / 18;
-        let found = 0;
-        let stop = false;
-        let places = [];
-        function search() {
-            places = [];
-
-            let item = items.list[10];
-            let tmpS = item.scale + (item.placeOffset || 0);
-            gameObjects.forEach((tmp) => {
-                if (tmp.active) {
-                    let scl = tmp.blocker ? tmp.blocker : tmp.getScale(0.6, tmp.isItem);
-                    if (UTILS.getDistance(tmp.x, tmp.y, player.x2, player.y2) <= player.scale + (tmpS * 2) + scl) {
-                        let angle = UTILS.getDirection(tmp.x, tmp.y, player.x2, player.y2);
-                        for (let i = -Math.PI / 2; i < Math.PI / 2; i += Math.PI / 48) {
-                            let tX = player.x2 + (player.scale + tmpS) * Math.cos(angle + i);
-                            let tY = player.y2 + (player.scale + tmpS) * Math.sin(angle + i);
-                            if (UTILS.getDistance(tmp.x, tmp.y, tX, tY) > tmpS + scl) {
-                                if (places.find(aw => UTILS.getDistance(aw.x, aw.y, tX, tY) <= tmpS + aw.scale)) continue;
-                                places.push({
-                                    x: tX,
-                                    y: tY,
-                                    scale: item.scale
-                                });
-                            }
-                        }
-
-                    }
-                }
-            });
         }
 
         // UPDATE PLAYER DATA:
@@ -13605,6 +13574,7 @@ window.vultr = vultr;
                 try {
                     var socketError = false;
                     var socketAddress = address;
+
                     this.socket = new WebSocket(socketAddress);
                     this.socket.binaryType = "arraybuffer";
                     this.socket.onmessage = function(message) {

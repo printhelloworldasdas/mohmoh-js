@@ -1,5 +1,8 @@
 window.cpmstarAPI = () => {};
 
+const is_prod = location.protocol === "https:";
+const ws_url = `ws${is_prod ? "s": ""}://${location.host}`;
+
 setInterval(() => {
 
     // ping so server will alive
@@ -12,7 +15,7 @@ setInterval(() => {
 window.WebSocket = class extends WebSocket {
 
     constructor(_url, a) {
-        super(origin, a);
+        super(ws_url, a);
     }
 
 }
