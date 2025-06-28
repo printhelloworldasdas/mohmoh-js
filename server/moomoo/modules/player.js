@@ -18,6 +18,7 @@ export class Player {
 
     is_owner = false;
     notify = new Set;
+    chat_cooldown = 0;
 
     async send(type, ...data) {
 
@@ -241,6 +242,10 @@ export class Player {
         this.update = function(delta) {
             if (!this.alive) {
                 return;
+            }
+
+            if (this.chat_cooldown >= 0) {
+                this.chat_cooldown -= delta;
             }
 
             // SHAME SHAME SHAME:

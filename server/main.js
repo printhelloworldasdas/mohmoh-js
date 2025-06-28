@@ -9,6 +9,7 @@ import { items } from "./moomoo/modules/items.js";
 import { UTILS } from "./moomoo/libs/utils.js";
 import { hats, accessories } from "./moomoo/modules/store.js";
 import { delay } from "./moomoo/modules/delay.js";
+import { filter_chat } from "./moomoo/libs/filterchat.js";
 
 const app = e();
 const server = createServer(app);
@@ -303,7 +304,23 @@ wss.on("connection", socket => {
                         break;
                     }
 
-                    game.server.broadcast("ch", player.sid, data[0]);
+                    if (player.chat_cooldown > 0) {
+                        break;
+                    }
+
+                    if (typeof data[0] !== "string") {
+                        break;
+                    }
+
+                    const chat = filter_chat(data[0]);
+
+                    if (chat.length === 0) {
+                        break;
+                    }
+
+                    game.server.broadcast("ch", player.sid, chat);
+                    player.chat_cooldown = 300;
+
                     break;
                 }
                 case "pp": {
