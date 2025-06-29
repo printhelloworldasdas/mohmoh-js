@@ -9896,6 +9896,7 @@ window.vultr = vultr;
 
             // UPDATE AGE:
             function updateAge(xp, mxp, age) {
+
                 if (xp != undefined)
                     player.XP = xp;
                 if (mxp != undefined)

@@ -269,8 +269,12 @@ export class Player {
             // REGENS AND AUTO:
             timerCount -= 1;
             if (timerCount <= 0) {
-                this.addResource(3, this.pps * 1000, true);
-                this.earnXP(this.pps * 1000);
+
+                if (this.pps) {
+                    this.addResource(3, this.pps * 1000, true);
+                    this.earnXP(this.pps * 1000);
+                }
+
                 var regenAmount = (this.skin && this.skin.healthRegen ? this.skin.healthRegen : 0) + (this.tail && this.tail.healthRegen ? this.tail.healthRegen : 0);
                 if (regenAmount) {
                     this.changeHealth(regenAmount, this);
@@ -464,6 +468,7 @@ export class Player {
 
         // EARN XP:
         this.earnXP = function(amount) {
+
             if (this.age < config.maxAge) {
                 this.XP += amount;
                 if (this.XP >= this.maxXP) {
