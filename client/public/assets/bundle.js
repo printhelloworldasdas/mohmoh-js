@@ -10358,7 +10358,7 @@ window.vultr = vultr;
                         tmpObj.animate(delta);
                         if (tmpObj.visible) {
                             tmpObj.skinRot += (0.002 * delta);
-                            tmpDir = tmpObj.dir + tmpObj.dirPlus;
+                            tmpDir = ((tmpObj == player) ? getAttackDir() : tmpObj.dir) + tmpObj.dirPlus;
                             mainContext.save();
                             mainContext.translate(tmpObj.x - xOffset, tmpObj.y - yOffset);
 
@@ -11125,7 +11125,6 @@ window.vultr = vultr;
             }
 
             function pingSocket() {
-                return;
                 lastPing = Date.now();
                 io.send("pp");
             }
