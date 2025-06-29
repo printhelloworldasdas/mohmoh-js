@@ -38,7 +38,7 @@ const game = new Game;
 
 wss.on("connection", (socket, req) => {
 
-    const addr = req.socket.remoteAddress;
+    const addr = req.headers["x-forwarded-for"]?.split(",")[0] ?? req.socket.remoteAddress;
 
     if (
         colimit.check(addr)
