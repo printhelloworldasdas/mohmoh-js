@@ -58,7 +58,7 @@ wss.on("connection", (socket, req) => {
         socket.send(encode([type, data]));
     };
 
-    socket.on("message", msg => {
+    socket.on("message", async msg => {
 
         try {
 
@@ -68,6 +68,8 @@ wss.on("connection", (socket, req) => {
             ] = decode(new Uint8Array(msg));
 
             const t = type?.toString();
+
+            await delay();
 
             switch(t) {
                 case "sp": {

@@ -8527,7 +8527,9 @@ window.vultr = vultr;
                     altServerText = "Try the sandbox";
                     altServerURL = "//sandbox.moomoo.io/";
                 }
-                document.getElementById("altServer").innerHTML = "<a href='" + altServerURL + "'>" + altServerText + "<i class='material-icons' style='font-size:10px;vertical-align:middle'>arrow_forward_ios</i></a>";
+                const alt_server = document.getElementById("altServer");
+                if (!alt_server) return;
+                alt_server.innerHTML = "<a href='" + altServerURL + "'>" + altServerText + "<i class='material-icons' style='font-size:10px;vertical-align:middle'>arrow_forward_ios</i></a>";
             }
 
             function updateServerList() {
@@ -9655,6 +9657,11 @@ window.vultr = vultr;
                         } else if (moveKeys[keyNum]) {
                             sendMoveDir();
                         } else if (keyNum == 32) {
+
+                            if (event.target === document.body) {
+                                event.preventDefault();
+                            }
+
                             attackState = 1;
                             sendAtckState();
                         }
@@ -10351,7 +10358,7 @@ window.vultr = vultr;
                         tmpObj.animate(delta);
                         if (tmpObj.visible) {
                             tmpObj.skinRot += (0.002 * delta);
-                            tmpDir = ((tmpObj == player) ? getAttackDir() : tmpObj.dir) + tmpObj.dirPlus;
+                            tmpDir = tmpObj.dir + tmpObj.dirPlus;
                             mainContext.save();
                             mainContext.translate(tmpObj.x - xOffset, tmpObj.y - yOffset);
 
@@ -11118,6 +11125,7 @@ window.vultr = vultr;
             }
 
             function pingSocket() {
+                return;
                 lastPing = Date.now();
                 io.send("pp");
             }
