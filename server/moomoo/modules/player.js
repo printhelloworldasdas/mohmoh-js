@@ -22,7 +22,11 @@ export class Player {
     clan_cooldown = 0;
     ping_cooldown = 0;
 
+    is_bot = false;
+
     async send(type, ...data) {
+
+        if (!this.socket) return;
 
         await delay();
 
