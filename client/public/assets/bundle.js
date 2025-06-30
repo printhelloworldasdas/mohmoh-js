@@ -11289,6 +11289,12 @@ window.vultr = vultr;
                     poison: true,
                     xp: 12000,
                     val: 1.18
+                }, {
+                    id: 4,
+                    src: "_e",
+                    poison: true,
+                    xp: 24000,
+                    val: 1.18
                 }];
                 module.exports.fetchVariant = function(player) {
                     var tmpXP = player.weaponXP[player.weaponIndex] || 0;
