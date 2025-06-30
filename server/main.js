@@ -427,9 +427,11 @@ wss.on("connection", (socket, req) => {
 
         } catch(e) {
 
+            // no need error handling i guess... but hmm
             console.error(e);
 
-            socket.close();
+            // so okok
+            // socket.close();
 
         }
 
