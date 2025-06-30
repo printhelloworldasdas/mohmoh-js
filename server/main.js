@@ -48,10 +48,7 @@ wss.on("connection", (socket, req) => {
 
     colimit.up(addr);
 
-    /**
-     * @type {Player | null}
-     */
-    let player = null;
+    const player = game.addPlayer(socket);
 
     const emit = async (type, ...data) => {
         await delay();
@@ -74,27 +71,19 @@ wss.on("connection", (socket, req) => {
             switch(t) {
                 case "sp": {
 
-                    (() => {
+                    if (player.alive) {
+                        break;
+                    }
 
-                        if (player && player.alive) {
-                            return;
-                        }
-    
-                        if (!player) {
-                            player = game.addPlayer(socket);
-                        }
-
-                        player.setUserData(data[0]);
-                        player.spawn(data[0]?.moofoll);
-                        player.send("1", player.sid);
-
-                    })();
+                    player.setUserData(data[0]);
+                    player.spawn(data[0]?.moofoll);
+                    player.send("1", player.sid);
 
                     break;
                 }
                 case "33": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -106,7 +95,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "c": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -129,7 +118,7 @@ wss.on("connection", (socket, req) => {
 
                 }
                 case "7": {
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -141,7 +130,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "2": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -153,7 +142,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "5": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -197,7 +186,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "13c": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -256,7 +245,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "6": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -316,7 +305,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "ch": {
 
-                    if (!player || !player.alive) {
+                    if (!player.alive) {
                         break;
                     }
 
@@ -345,7 +334,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "8": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     if (player.team) break;
 
@@ -366,7 +355,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "9": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     if (!player.team) break;
 
@@ -385,7 +374,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "10": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     if (player.team) break;
 
@@ -399,7 +388,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "11": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     if (!player.team) break;
 
@@ -414,7 +403,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "14": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     if (player.ping_cooldown > 0) break;
 
@@ -426,7 +415,7 @@ wss.on("connection", (socket, req) => {
                 }
                 case "rmd": {
 
-                    if (!player || !player.alive) break;
+                    if (!player.alive) break;
 
                     player.resetMoveDir();
 
@@ -450,8 +439,6 @@ wss.on("connection", (socket, req) => {
 
         colimit.down(addr);
 
-        if (!player) return;
-
         if (player.team) {
 
             if (player.is_owner) {
@@ -462,7 +449,7 @@ wss.on("connection", (socket, req) => {
 
         }
 
-        game.removePlayer(player?.id);
+        game.removePlayer(player.id);
 
     });
 

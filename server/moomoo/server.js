@@ -8,7 +8,7 @@ import { Projectile } from "./modules/projectile.js";
 import { ObjectManager } from "./modules/objectManager.js";
 import { GameObject } from "./modules/gameObject.js";
 import { items } from "./modules/items.js";
-import { AiManager } from "./modules/aiManager.js";
+import { AiManager } from "./modules/aiMaanager.js";
 import { accessories, hats } from "./modules/store.js";
 import { ClanManager } from "./modules/clanManager.js";
 
