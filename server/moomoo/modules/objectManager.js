@@ -267,7 +267,7 @@ export class ObjectManager {
                 if (tmpInt <= 0) {
                     if (!other.ignoreCollision) {
                         var tmpDir = UTILS.getDirection(player.x, player.y, other.x, other.y);
-                        var tmpDist = UTILS.getDistance(player.x, player.y, other.x, other.y);
+
                         if (other.isPlayer) {
                             tmpInt = tmpInt * -1 / 2;
                             player.x += tmpInt * mathCOS(tmpDir);

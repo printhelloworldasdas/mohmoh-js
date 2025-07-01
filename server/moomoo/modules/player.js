@@ -347,41 +347,45 @@ export class Player {
             this.zIndex = 0;
             this.lockMove = false;
             this.healCol = 0;
-            var tmpList;
-            var tmpSpeed = UTILS.getDistance(0, 0, this.xVel * delta, this.yVel * delta);
-            var depth = Math.min(4, Math.max(1, Math.round(tmpSpeed / 40)));
-            var tMlt = 1 / depth;
 
-            for (var i = 0; i < depth; ++i) {
+            (() => {
 
-                const alreadyCollided = {};
+                const dist = UTILS.getDistance(0, 0, this.xVel * delta, this.yVel * delta);
+                const depth = Math.min(4, Math.max(1, Math.round(dist / 40)));
+                const mlt = 1 / depth;
                 
-                if (this.xVel) {
-                    this.x += this.xVel * delta * tMlt;
-                }
-                if (this.yVel) {
-                    this.y += this.yVel * delta * tMlt;
-                }
-                tmpList = objectManager.getGridArrays(this.x, this.y, this.scale);
-                for (var x = 0; x < tmpList.length; ++x) {
-                    for (var y = 0; y < tmpList[x].length; ++y) {
+                for (let i = 0; i < depth; i++) {
+                
+                    if (this.xVel) {
+                        this.x += this.xVel * delta * mlt;
+                    }
+                    if (this.yVel) {
+                        this.y += this.yVel * delta * mlt;
+                    }
 
-                        const game_object = tmpList[x][y];
+                    const arrs = objectManager.getGridArrays(this.x, this.y, this.scale);
+                    const already = new Set;
 
-                        if (
-                            game_object.active &&
-                            !alreadyCollided[game_object.sid]
-                        ) {
-                            alreadyCollided[game_object.sid] = true;
-                            objectManager.checkCollision(this, game_object, tMlt);
-                            if (!this.alive) break;
+                    for (let x = 0; x < arrs.length; x++) {
+                        for (let y = 0; y < arrs[x].length; y++) {
+
+                            const obj = arrs[x][y];
+                
+                            if (!obj.active || already.has(obj.sid)) {
+                                continue;
+                            }
+                
+                            already.add(obj.sid);
+                            objectManager.checkCollision(this, obj, mlt);
+                
+                            if (!this.alive) return;
+
                         }
 
                     }
-                    if (!this.alive) break;
                 }
-                if (!this.alive) break;
-            }
+
+            })();
 
             // PLAYER COLLISIONS:
             var tmpIndx = players.indexOf(this);
