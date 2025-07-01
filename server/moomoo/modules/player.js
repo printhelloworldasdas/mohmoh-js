@@ -352,8 +352,9 @@ export class Player {
             var depth = Math.min(4, Math.max(1, Math.round(tmpSpeed / 40)));
             var tMlt = 1 / depth;
 
-            const alreadyCollided = {};
             for (var i = 0; i < depth; ++i) {
+
+                const alreadyCollided = {};
                 
                 if (this.xVel) {
                     this.x += this.xVel * delta * tMlt;
@@ -373,6 +374,7 @@ export class Player {
                         ) {
                             alreadyCollided[game_object.sid] = true;
                             objectManager.checkCollision(this, game_object, tMlt);
+                            if (!this.alive) break;
                         }
 
                     }
